@@ -9,3 +9,5 @@ def lookup(obj):
     """
 
     return dir(obj)
+Footer
+© 2023 GitHub, Inc.
