@@ -1,21 +1,15 @@
 #!/usr/bin/python3
-""" cities in state """
+'''Using the SQL Alchemy in defining a database class'''
+
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, ForeignKey
+Base = declarative_base()
 
 
-if __name__ == "__main__":
-    from sys import argv
-    from model_state import Base, State
-    from model_city import City
-    from sqlalchemy import create_engine
-    from sqlalchemy.orm import aliased, sessionmaker
+class City(Base):
+    '''A class defination of a table in the sql'''
+    __tablename__ = 'cities'
 
-    engine = create_engine('mysql+mysqldb://{}:{}@localhost/{}'.format(
-        argv[1], argv[2], argv[3]), pool_pre_ping=True)
-    Session = sessionmaker()
-    session = Session(bind=engine)
-    Base.metadata.create_all(engine)
-    res = (session.query(State, City).filter(
-        State.id == City.state_id).order_by(City.id).all())
-    for st, cy in res:
-        print("{}: ({:d}) {}".format(st.name, cy.id, cy.name))
-    session.close()
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    name = Column(String(128), nullable=False)
+    state_id = Column(Integer, ForeignKey('states.id'), nullable=False)
